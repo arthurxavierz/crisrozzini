@@ -1,0 +1,14 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true });
+const p = await b.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
+await p.addInitScript(() => { try { sessionStorage.setItem('cr-intro', '1'); } catch (e) {} });
+await p.goto('http://localhost:5300/index.html', { waitUntil: 'networkidle' });
+await p.addStyleTag({ content: '.hero{min-height:630px}.hero-inner{padding-top:60px}.site-header,.hero-badge,.scroll-cue,.wa-float,.hero-swatches{display:none!important}.hero-foot .btn-row{display:none}' });
+await p.waitForTimeout(4500);
+await p.screenshot({ path: '../crisrozzini/dist/assets/og-crisrozzini.jpg', type: 'jpeg', quality: 82 });
+const q = await b.newPage({ viewport: { width: 180, height: 180 } });
+await q.goto('http://localhost:5300/robots.txt');
+await q.evaluate(() => { document.documentElement.innerHTML = '<body style="margin:0;background:#7e1a37"><img src="/assets/favicon.svg" style="width:180px;height:180px;display:block"></body>'; });
+await q.waitForTimeout(500);
+await q.screenshot({ path: '../crisrozzini/dist/assets/apple-touch-icon.png' });
+await b.close(); console.log('ok');
